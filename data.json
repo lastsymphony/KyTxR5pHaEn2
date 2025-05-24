@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "One Piece",
+    "cover": "assets/images/onepiece.jpg",
+    "chapter": "1115",
+    "genre": "Action, Adventure",
+    "status": "Ongoing",
+    "desc": "Petualangan Luffy mencari One Piece."
+  },
+  {
+    "id": 2,
+    "title": "Jujutsu Kaisen",
+    "cover": "assets/images/jujutsu.jpg",
+    "chapter": "263",
+    "genre": "Action, Supernatural",
+    "status": "Ongoing",
+    "desc": "Yuji Itadori melawan kutukan."
+  }
+]
