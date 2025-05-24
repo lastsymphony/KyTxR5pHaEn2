@@ -6,15 +6,23 @@
     "chapter": "1115",
     "genre": "Action, Adventure",
     "status": "Ongoing",
-    "desc": "Petualangan Luffy mencari One Piece."
-  },
-  {
-    "id": 2,
-    "title": "Jujutsu Kaisen",
-    "cover": "assets/images/jujutsu.jpg",
-    "chapter": "263",
-    "genre": "Action, Supernatural",
-    "status": "Ongoing",
-    "desc": "Yuji Itadori melawan kutukan."
+    "desc": "Petualangan Luffy mencari One Piece.",
+    "chapters": [
+      {
+        "number": 1115,
+        "pages": [
+          "assets/manga/onepiece/1115/1.jpg",
+          "assets/manga/onepiece/1115/2.jpg",
+          "assets/manga/onepiece/1115/3.jpg"
+        ]
+      },
+      {
+        "number": 1114,
+        "pages": [
+          "assets/manga/onepiece/1114/1.jpg",
+          "assets/manga/onepiece/1114/2.jpg"
+        ]
+      }
+    ]
   }
 ]
