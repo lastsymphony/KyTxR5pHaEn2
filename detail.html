@@ -6,27 +6,40 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white">
-  <header class="p-4 bg-gray-800 text-center text-2xl font-bold">WestManga Clone</header>
+  <header class="p-4 bg-gray-800 text-2xl font-bold">WestManga Clone</header>
 
-  <main class="p-4">
-    <div class="flex flex-col md:flex-row gap-4">
-      <img src="assets/images/manga1.jpg" alt="Manga Title" class="w-48 rounded">
-      <div>
-        <h1 class="text-3xl font-bold">Judul Manga</h1>
-        <p class="text-sm text-gray-300 mt-2">Genre: Action, Fantasy</p>
-        <p class="text-sm text-gray-300 mt-2">Status: Ongoing</p>
-        <p class="mt-4">Deskripsi singkat tentang manga ini.</p>
-      </div>
-    </div>
+  <main class="p-4" id="detailContainer"></main>
 
-    <div class="mt-6">
-      <h2 class="text-xl font-semibold">Chapter</h2>
-      <ul class="mt-2">
-        <li><a href="reader.html" class="text-blue-400">Chapter 45</a></li>
-        <li><a href="reader.html" class="text-blue-400">Chapter 44</a></li>
-        <!-- Tambah chapter sesuai data -->
-      </ul>
-    </div>
-  </main>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    fetch('data.json')
+      .then(res => res.json())
+      .then(data => {
+        const manga = data.find(m => m.id == id);
+        if(manga) {
+          document.getElementById('detailContainer').innerHTML = `
+            <div class="flex flex-col md:flex-row gap-4">
+              <img src="${manga.cover}" class="w-48 rounded">
+              <div>
+                <h1 class="text-3xl font-bold">${manga.title}</h1>
+                <p class="text-sm text-gray-300 mt-2">Genre: ${manga.genre}</p>
+                <p class="text-sm text-gray-300 mt-2">Status: ${manga.status}</p>
+                <p class="mt-4">${manga.desc}</p>
+              </div>
+            </div>
+            <div class="mt-6">
+              <h2 class="text-xl font-semibold">Chapter</h2>
+              <ul class="mt-2">
+                <li><a href="reader.html" class="text-blue-400">Chapter ${manga.chapter}</a></li>
+              </ul>
+            </div>
+          `;
+        } else {
+          document.getElementById('detailContainer').innerHTML = "<p>Data tidak ditemukan.</p>";
+        }
+      });
+  </script>
 </body>
 </html>
