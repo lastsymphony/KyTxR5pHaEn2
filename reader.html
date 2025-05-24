@@ -40,6 +40,55 @@
           `;
         });
       });
+    function getCommentsKey() {
+  return `comments-${id}-${chapterNumber}`;
+}
+
+function loadComments() {
+  const comments = JSON.parse(localStorage.getItem(getCommentsKey())) || [];
+  const list = document.getElementById("commentList");
+  list.innerHTML = "";
+  comments.forEach((c, index) => {
+    list.innerHTML += `
+      <div class="bg-gray-700 p-2 rounded">
+        <p class="text-sm">${c}</p>
+        <button onclick="deleteComment(${index})" class="text-red-400 text-xs mt-1">Hapus</button>
+      </div>
+    `;
+  });
+}
+
+function addComment() {
+  const input = document.getElementById("commentInput");
+  const text = input.value.trim();
+  if(text === "") return;
+
+  const comments = JSON.parse(localStorage.getItem(getCommentsKey())) || [];
+  comments.push(text);
+  localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+
+  input.value = "";
+  loadComments();
+}
+
+function deleteComment(index) {
+  const comments = JSON.parse(localStorage.getItem(getCommentsKey())) || [];
+  comments.splice(index, 1);
+  localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+  loadComments();
+}
+
+// Load saat halaman dibuka
+loadComments();
+
   </script>
+  <div class="mt-8">
+  <h2 class="text-xl font-bold mb-2">Komentar</h2>
+  <div id="commentList" class="space-y-2 mb-4"></div>
+  
+  <textarea id="commentInput" class="w-full p-2 rounded bg-gray-800 text-white mb-2" rows="3" placeholder="Tulis komentar..."></textarea>
+  <button onclick="addComment()" class="bg-blue-600 px-4 py-2 rounded">Kirim</button>
+</div>
+
 </body>
 </html>
