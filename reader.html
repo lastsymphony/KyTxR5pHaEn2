@@ -6,12 +6,40 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white">
-  <header class="p-4 bg-gray-800 text-center text-2xl font-bold">WestManga Clone</header>
+  <header class="p-4 bg-gray-800 text-2xl font-bold">WestManga Clone</header>
 
-  <main class="p-4 space-y-4">
-    <img src="assets/images/page1.jpg" alt="Page 1" class="w-full rounded">
-    <img src="assets/images/page2.jpg" alt="Page 2" class="w-full rounded">
-    <!-- Tambah halaman manga -->
-  </main>
+  <main class="p-4" id="readerContainer"></main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const chapterNumber = params.get("chapter");
+
+    fetch('data.json')
+      .then(res => res.json())
+      .then(data => {
+        const manga = data.find(m => m.id == id);
+        if(!manga) {
+          document.getElementById('readerContainer').innerHTML = "<p>Manga tidak ditemukan.</p>";
+          return;
+        }
+
+        const chapter = manga.chapters.find(c => c.number == chapterNumber);
+        if(!chapter) {
+          document.getElementById('readerContainer').innerHTML = "<p>Chapter tidak ditemukan.</p>";
+          return;
+        }
+
+        document.getElementById('readerContainer').innerHTML = `
+          <h1 class="text-2xl font-bold mb-4">${manga.title} - Chapter ${chapter.number}</h1>
+        `;
+
+        chapter.pages.forEach(img => {
+          document.getElementById('readerContainer').innerHTML += `
+            <img src="${img}" class="w-full mb-4 rounded">
+          `;
+        });
+      });
+  </script>
 </body>
 </html>
