@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Instagram Downloader BetaBotz</title>
+  <title>Instagram Downloader - Neoxr API</title>
   <style>
     body {
       background: #111;
@@ -39,26 +39,35 @@
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = "⏳ Mengambil data...";
 
-      const apiKey = "Btz-5jVTT"; // Ganti jika kamu punya API key sendiri
-      const apiUrl = `https://api.betabotz.eu.org/api/download/igdowloader?url=${encodeURIComponent(url)}&apikey=${apiKey}`;
+      const apiKey = "1uJzjq";
+      const apiUrl = `https://api.neoxr.eu/api/ig?url=${encodeURIComponent(url)}&apikey=${apiKey}`;
 
       try {
         const res = await fetch(apiUrl);
         const data = await res.json();
 
-        if (!data.status || !data.message || !data.message[0]?._url) {
-          resultDiv.innerHTML = "❌ Gagal mengambil media.";
+        if (!data || !data.result || data.result.length === 0) {
+          resultDiv.innerHTML = "❌ Media tidak ditemukan.";
           return;
         }
 
-        const videoUrl = data.message[0]._url;
-        const thumb = data.message[0].thumbnail;
+        // Tampilkan semua media
+        resultDiv.innerHTML = "";
+        data.result.forEach(item => {
+          const mediaUrl = item.url;
+          if (mediaUrl.includes('.mp4')) {
+            resultDiv.innerHTML += `
+              <video controls src="${mediaUrl}" autoplay muted></video><br>
+              <a href="${mediaUrl}" download><button>⬇ Download Video</button></a><br><br>
+            `;
+          } else {
+            resultDiv.innerHTML += `
+              <img src="${mediaUrl}" /><br>
+              <a href="${mediaUrl}" download><button>⬇ Download Gambar</button></a><br><br>
+            `;
+          }
+        });
 
-        resultDiv.innerHTML = `
-          <video controls src="${videoUrl}" autoplay muted></video><br>
-          <a href="${videoUrl}" download><button>⬇ Download Video</button></a><br><br>
-          <small>${data.message[0].wm || ""}</small>
-        `;
       } catch (err) {
         console.error(err);
         resultDiv.innerHTML = "❌ Gagal menghubungi API.";
