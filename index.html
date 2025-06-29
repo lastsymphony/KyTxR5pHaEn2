@@ -2,6 +2,7 @@
 <html lang="id" class="dark">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instagram Downloader</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -160,7 +161,7 @@
             resultDiv.innerHTML += `
               <div>
                 <p class="mb-2 text-cyan-300">Media ${index + 1}:</p>
-                <video controls autoplay muted src="${mediaUrl}" class="mx-auto rounded-lg shadow-lg w-full max-w-md"></video>
+                <video controls autoplay muted src="${mediaUrl}" class="mx-auto w-full h-auto rounded-lg shadow-lg max-w-screen-sm md:max-w-md"></video>
                 <a href="${mediaUrl}" download>
                   <button class="mt-2 bg-cyan-600 hover:bg-cyan-700 transition px-4 py-2 rounded-md">⬇ Download Video ${index + 1}</button>
                 </a>
@@ -170,7 +171,7 @@
             resultDiv.innerHTML += `
               <div>
                 <p class="mb-2 text-cyan-300">Media ${index + 1}:</p>
-                <img src="${mediaUrl}" onclick="showModal('${mediaUrl}')" class="cursor-pointer mx-auto rounded-lg shadow-lg max-w-xs hover:scale-105 transition" />
+                <img src="${mediaUrl}" onclick="showModal('${mediaUrl}')" class="cursor-pointer w-full h-auto max-w-screen-sm md:max-w-xs mx-auto rounded-lg shadow-lg hover:scale-105 transition" />
                 <a href="${mediaUrl}" download>
                   <button class="mt-2 bg-cyan-600 hover:bg-cyan-700 transition px-4 py-2 rounded-md">⬇ Download Gambar ${index + 1}</button>
                 </a>
