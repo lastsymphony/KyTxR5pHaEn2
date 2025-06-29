@@ -2,28 +2,41 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>WestManga Clone</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>YouTube Downloader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+    input, button { padding: 10px; margin: 10px; border-radius: 5px; }
+  </style>
 </head>
-<body class="bg-gray-900 text-white">
-  <header class="p-4 bg-gray-800 flex justify-between items-center">
-    <h1 class="text-2xl font-bold">WestManga Clone</h1>
-    <input type="text" id="search" placeholder="Cari manga..." class="px-3 py-1 rounded bg-gray-700 text-white">
-  </header>
+<body>
+  <h2>YT Downloader</h2>
+  <input type="text" id="ytUrl" placeholder="Tempel URL YouTube" />
+  <button onclick="download()">Download</button>
+  <div id="result"></div>
 
-  <div class="p-4">
-    <select id="genreFilter" class="mb-4 p-2 rounded bg-gray-800">
-      <option value="">Semua Genre</option>
-      <option value="Action">Action</option>
-      <option value="Adventure">Adventure</option>
-      <option value="Supernatural">Supernatural</option>
-    </select>
+  <script>
+    async function download() {
+      const url = encodeURIComponent(document.getElementById('ytUrl').value);
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerText = 'Loading...';
+      try {
+        const res = await fetch(`https://api.ryzumi.vip/api/downloader/aiodown?url=${url}`);
+        const json = await res.json();
 
-    <div id="mangaList" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-
-    <div class="flex justify-center mt-6 space-x-2" id="pagination"></div>
-  </div>
-
-  <script src="js/loadManga.js"></script>
+        if (json && json.result) {
+          let html = `<h3>${json.result.title}</h3>`;
+          json.result.medias.forEach(media => {
+            html += `<p><a href="${media.url}" target="_blank">${media.quality} - ${media.ext}</a></p>`;
+          });
+          resultDiv.innerHTML = html;
+        } else {
+          resultDiv.innerText = 'Gagal mendapatkan data.';
+        }
+      } catch (e) {
+        resultDiv.innerText = 'Terjadi error.';
+      }
+    }
+  </script>
 </body>
 </html>
