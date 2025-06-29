@@ -140,8 +140,11 @@
 
       resultDiv.innerHTML = "<p class='text-gray-400 animate-pulse'>⏳ Mengambil data...</p>";
 
-      const apiUrl = `https://daf03996-90ef-40ba-9d8e-5ca68cbcafbd-00-30x9jf6ojj02p.spock.replit.dev/ig?url=${encodeURIComponent(url)}`;
 
+
+      const apiKey = "KyTxR5pHaEn2";
+      const apiUrl = `https://api.neoxr.eu/api/ig?url=${encodeURIComponent(url)}&apikey=${apiKey}`; 
+      
       try {
         const res = await fetch(apiUrl);
         const data = await res.json();
