@@ -1,75 +1,221 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <title>Instagram Downloader - Neoxr</title>
+  <title>Instagram Downloader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      background: #111;
-      color: white;
-      font-family: sans-serif;
-      text-align: center;
-      padding: 2rem;
+    .modal-enter {
+      opacity: 0;
+      transform: scale(0.95);
     }
-    input, button {
-      padding: 10px;
-      margin: 10px;
-      border: none;
-      border-radius: 6px;
+    .modal-enter-active {
+      opacity: 1;
+      transform: scale(1);
+      transition: all 0.2s ease-out;
     }
-    input {
-      width: 300px;
+    .modal-leave {
+      opacity: 1;
+      transform: scale(1);
     }
-    img, video {
-      max-width: 90%;
-      margin-top: 20px;
-      border-radius: 10px;
+    .modal-leave-active {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: all 0.15s ease-in;
     }
   </style>
 </head>
-<body>
-  <h1>Instagram Downloader</h1>
-  <input type="text" id="urlInput" placeholder="Tempel link Instagram di sini" />
-  <button onclick="downloadIG()">Download</button>
-  <div id="result"></div>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-start p-6 space-y-6">
+<!-- Navbar -->
+<nav class="w-full fixed top-0 left-0 z-50 backdrop-blur-md bg-white/10 border-b border-white/10 text-white">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <span class="text-cyan-400 font-bold text-lg">v.1.0</span>
 
+    <!-- Hamburger button -->
+    <button id="navToggle" class="md:hidden text-white focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Spacer -->
+<div class="h-[64px]"></div>
+
+<!-- Side Menu Overlay -->
+<div id="sideNav" class="fixed top-0 right-0 w-full sm:w-64 h-full bg-gray-800/20 backdrop-blur-md text-white transform translate-x-full transition-transform duration-500 ease-in-out z-50">
+  <div class="flex justify-between items-center px-4 py-4 border-b border-gray-700">
+    <span class="text-cyan-400 font-bold"> Navigasi</span>
+    <button onclick="closeNav()" class="text-white hover:text-red-400">
+      ✖
+    </button>
+  </div>
+  <div class="flex flex-col gap-4 px-6 py-6 text-sm font-medium">
+    <a href="https://adityajatayu.my.id/" target="_blank" class="hover:text-cyan-400 transition">Portfolio</a>
+    <a href="https://katheryne.biz.id/" target="_blank" class="hover:text-cyan-400 transition">Gallery Public</a>
+    <a href="https://lastsymphony.github.io/Generator-json-gallery/" target="_blank" class="hover:text-cyan-400 transition">JSON Gallery Generator</a>
+    <a href="https://instagram.com/lastsymph" target="_blank" class="hover:text-cyan-400 transition">Instagram</a>
+    <a href="mailto:jatayupaint01@gmail.com" class="hover:text-cyan-400 transition">Email</a>
+    <a href="https://github.com/lastsymphony" target="_blank" class="hover:text-cyan-400 transition">GitHub</a>
+    <a href="https://m.youtube.com/channel/UC-8aUGvvADFQKWBr6n2-mSg/videos" target="_blank" class="hover:text-cyan-400 transition">YouTube</a>
+  </div>
+</div>
+
+<!-- Overlay background when menu open -->
+<div id="navBackdrop" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40" onclick="closeNav()"></div>
+
+  <h1 class="text-3xl font-bold text-cyan-400">Instagram Downloader</h1>
+  <p class="text-gray-400 text-sm mt-1">
+  Still under development
+</p>
+<p class="text-gray-400 text-sm mt-1">
+  Report bug's on E-mail / Dm Instagram
+</p>
+  
+  <div class="flex flex-col items-center gap-4 w-full max-w-md">
+  <div class="relative w-full">
+    <input type="text" id="urlInput" placeholder="Tempel link Instagram di sini"
+      class="w-full px-4 py-2 pr-12 rounded-md bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+    
+    <button onclick="pasteFromClipboard()" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-white">
+      <!-- SVG Icon Clipboard -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M8 6H5a2 2 0 00-2 2v10a2 2 0 002 2h11a2 2 0 002-2v-3m-4-13h6a2 2 0 012 2v6m-6-8v4a2 2 0 002 2h4" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="flex gap-3">
+    <button onclick="downloadIG()"
+      class="bg-cyan-500 hover:bg-cyan-600 transition text-white px-6 py-2 rounded-md font-medium">
+      Download
+    </button>
+
+    <button onclick="resetForm()"
+      class="bg-red-500 hover:bg-red-600 transition text-white px-6 py-2 rounded-md font-medium">
+      Reset
+    </button>
+  </div>
+</div>
+
+  <div id="result" class="transition-all duration-500 ease-in-out w-full max-w-3xl space-y-8 mt-6 text-center"></div>
+
+  <!-- Modal -->
+  <div id="imgModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50">
+    <div class="relative">
+      <img id="modalImg" src="" class="max-w-[90vw] max-h-[90vh] rounded-lg shadow-lg" />
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-white bg-gray-800 hover:bg-gray-700 p-2 rounded-full">✖</button>
+    </div>
+  </div>
+ <!--footer-->
+<footer class="mt-10 w-full border-t border-gray-700 pt-6 pb-4 text-center text-sm text-gray-400">
+  Dibuat dengan ❤️ oleh <span class="text-cyan-400 font-medium">Aditya Jatayu </span> · © 2025
+</footer>
   <script>
+  	const navToggle = document.getElementById("navToggle");
+  const sideNav = document.getElementById("sideNav");
+  const backdrop = document.getElementById("navBackdrop");
+
+  navToggle.addEventListener("click", () => {
+    sideNav.classList.remove("translate-x-full");
+    sideNav.classList.add("translate-x-0");
+    backdrop.classList.remove("hidden");
+  });
+
+  function closeNav() {
+    sideNav.classList.remove("translate-x-0");
+    sideNav.classList.add("translate-x-full");
+    backdrop.classList.add("hidden");
+  }
     async function downloadIG() {
       const url = document.getElementById('urlInput').value.trim();
       const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = "⏳ Mengambil data...";
+      if (!url) return resultDiv.innerHTML = "<p class='text-yellow-400'>⚠️ Link tidak boleh kosong.</p>";
 
-      const apiKey = "1uJzjq";
-      const apiUrl = `https://api.neoxr.eu/api/ig?url=${encodeURIComponent(url)}&apikey=${apiKey}`;
+      resultDiv.innerHTML = "<p class='text-gray-400 animate-pulse'>⏳ Mengambil data...</p>";
+
+      const apiUrl = `https://daf03996-90ef-40ba-9d8e-5ca68cbcafbd-00-30x9jf6ojj02p.spock.replit.dev/ig?url=${encodeURIComponent(url)}`;
 
       try {
         const res = await fetch(apiUrl);
         const data = await res.json();
 
-        if (!data.status || !data.data || !data.data[0]?.url) {
-          resultDiv.innerHTML = "❌ Media tidak ditemukan.";
+        if (!data.status || !data.data || data.data.length === 0) {
+          resultDiv.innerHTML = "<p class='text-red-500'>❌ Media tidak ditemukan.</p>";
           return;
         }
 
-        const media = data.data[0];
-        const mediaUrl = media.url;
+        resultDiv.innerHTML = "";
 
-        if (media.type === "mp4") {
-          resultDiv.innerHTML = `
-            <video controls src="${mediaUrl}" autoplay muted></video><br>
-            <a href="${mediaUrl}" download><button>⬇ Download Video</button></a>
-          `;
-        } else {
-          resultDiv.innerHTML = `
-            <img src="${mediaUrl}" /><br>
-            <a href="${mediaUrl}" download><button>⬇ Download Gambar</button></a>
-          `;
-        }
+        data.data.forEach((media, index) => {
+          const mediaUrl = media.url;
+          const type = media.type;
+
+          if (type === "mp4") {
+            resultDiv.innerHTML += `
+              <div>
+                <p class="mb-2 text-cyan-300">Media ${index + 1}:</p>
+                <video controls autoplay muted src="${mediaUrl}" class="mx-auto rounded-lg shadow-lg w-full max-w-md"></video>
+                <a href="${mediaUrl}" download>
+                  <button class="mt-2 bg-cyan-600 hover:bg-cyan-700 transition px-4 py-2 rounded-md">⬇ Download Video ${index + 1}</button>
+                </a>
+              </div>
+            `;
+          } else {
+            resultDiv.innerHTML += `
+              <div>
+                <p class="mb-2 text-cyan-300">Media ${index + 1}:</p>
+                <img src="${mediaUrl}" onclick="showModal('${mediaUrl}')" class="cursor-pointer mx-auto rounded-lg shadow-lg max-w-xs hover:scale-105 transition" />
+                <a href="${mediaUrl}" download>
+                  <button class="mt-2 bg-cyan-600 hover:bg-cyan-700 transition px-4 py-2 rounded-md">⬇ Download Gambar ${index + 1}</button>
+                </a>
+              </div>
+            `;
+          }
+        });
 
       } catch (err) {
         console.error(err);
-        resultDiv.innerHTML = "❌ Gagal menghubungi API.";
+        resultDiv.innerHTML = "<p class='text-red-500'>❌ Gagal menghubungi API.</p>";
       }
+    }
+
+    function resetForm() {
+      document.getElementById('urlInput').value = '';
+      document.getElementById('result').innerHTML = '';
+    }
+
+    function showModal(url) {
+      const modal = document.getElementById("imgModal");
+      const img = document.getElementById("modalImg");
+      img.src = url;
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+    
+    async function pasteFromClipboard() {
+  try {
+    const text = await navigator.clipboard.readText();
+    document.getElementById('urlInput').value = text;
+  } catch (err) {
+    alert("❌ Gagal membaca clipboard. Aktifkan izin akses clipboard.");
+    console.error(err);
+  }
+}
+
+resultDiv.innerHTML = "";
+resultDiv.classList.remove("opacity-0");
+resultDiv.classList.add("opacity-100");
+
+    function closeModal() {
+      const modal = document.getElementById("imgModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
     }
   </script>
 </body>
