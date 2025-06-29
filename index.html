@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Instagram Downloader - Neoxr API</title>
+  <title>Instagram Downloader - Neoxr</title>
   <style>
     body {
       background: #111;
@@ -46,27 +46,25 @@
         const res = await fetch(apiUrl);
         const data = await res.json();
 
-        if (!data || !data.result || data.result.length === 0) {
+        if (!data.status || !data.data || !data.data[0]?.url) {
           resultDiv.innerHTML = "❌ Media tidak ditemukan.";
           return;
         }
 
-        // Tampilkan semua media
-        resultDiv.innerHTML = "";
-        data.result.forEach(item => {
-          const mediaUrl = item.url;
-          if (mediaUrl.includes('.mp4')) {
-            resultDiv.innerHTML += `
-              <video controls src="${mediaUrl}" autoplay muted></video><br>
-              <a href="${mediaUrl}" download><button>⬇ Download Video</button></a><br><br>
-            `;
-          } else {
-            resultDiv.innerHTML += `
-              <img src="${mediaUrl}" /><br>
-              <a href="${mediaUrl}" download><button>⬇ Download Gambar</button></a><br><br>
-            `;
-          }
-        });
+        const media = data.data[0];
+        const mediaUrl = media.url;
+
+        if (media.type === "mp4") {
+          resultDiv.innerHTML = `
+            <video controls src="${mediaUrl}" autoplay muted></video><br>
+            <a href="${mediaUrl}" download><button>⬇ Download Video</button></a>
+          `;
+        } else {
+          resultDiv.innerHTML = `
+            <img src="${mediaUrl}" /><br>
+            <a href="${mediaUrl}" download><button>⬇ Download Gambar</button></a>
+          `;
+        }
 
       } catch (err) {
         console.error(err);
