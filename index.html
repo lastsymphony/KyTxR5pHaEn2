@@ -1,40 +1,67 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>YouTube Downloader</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Instagram Downloader BetaBotz</title>
   <style>
-    body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
-    input, button { padding: 10px; margin: 10px; border-radius: 5px; }
+    body {
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border: none;
+      border-radius: 6px;
+    }
+    input {
+      width: 300px;
+    }
+    img, video {
+      max-width: 90%;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
-  <h2>YT Downloader</h2>
-  <input type="text" id="ytUrl" placeholder="Tempel URL YouTube" />
-  <button onclick="download()">Download</button>
+  <h1>Instagram Downloader</h1>
+  <input type="text" id="urlInput" placeholder="Tempel link Instagram di sini" />
+  <button onclick="downloadIG()">Download</button>
   <div id="result"></div>
 
   <script>
-    async function download() {
-      const url = encodeURIComponent(document.getElementById('ytUrl').value);
+    async function downloadIG() {
+      const url = document.getElementById('urlInput').value.trim();
       const resultDiv = document.getElementById('result');
-      resultDiv.innerText = 'Loading...';
-      try {
-        const res = await fetch(`https://api.ryzumi.vip/api/downloader/aiodown?url=${url}`);
-        const json = await res.json();
+      resultDiv.innerHTML = "⏳ Mengambil data...";
 
-        if (json && json.result) {
-          let html = `<h3>${json.result.title}</h3>`;
-          json.result.medias.forEach(media => {
-            html += `<p><a href="${media.url}" target="_blank">${media.quality} - ${media.ext}</a></p>`;
-          });
-          resultDiv.innerHTML = html;
-        } else {
-          resultDiv.innerText = 'Gagal mendapatkan data.';
+      const apiKey = "Btz-5jVTT"; // Ganti jika kamu punya API key sendiri
+      const apiUrl = `https://api.betabotz.eu.org/api/download/igdowloader?url=${encodeURIComponent(url)}&apikey=${apiKey}`;
+
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        if (!data.status || !data.message || !data.message[0]?._url) {
+          resultDiv.innerHTML = "❌ Gagal mengambil media.";
+          return;
         }
-      } catch (e) {
-        resultDiv.innerText = 'Terjadi error.';
+
+        const videoUrl = data.message[0]._url;
+        const thumb = data.message[0].thumbnail;
+
+        resultDiv.innerHTML = `
+          <video controls src="${videoUrl}" autoplay muted></video><br>
+          <a href="${videoUrl}" download><button>⬇ Download Video</button></a><br><br>
+          <small>${data.message[0].wm || ""}</small>
+        `;
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = "❌ Gagal menghubungi API.";
       }
     }
   </script>
