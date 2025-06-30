@@ -398,83 +398,76 @@ const apiUrl = `https://api.neoxr.eu/api/tiktok?url=${encodeURIComponent(url)}&a
 
   
  
+
   async function downloadYT() {
-  const url = document.getElementById('urlInput').value.trim();
-  const resultDiv = document.getElementById('result');
+    const url = document.getElementById('urlInput').value.trim();
+    const resultDiv = document.getElementById('result');
 
-  if (!url) {
-    resultDiv.innerHTML = "<p class='text-yellow-400'>⚠️ Link tidak boleh kosong.</p>";
-    console.warn("URL input kosong.");
-    return;
-  }
-
-  resultDiv.innerHTML = "<p class='text-gray-400 animate-pulse'>⏳ Mengambil data dari API...</p>";
-  console.log("📡 Memanggil API dengan URL:", url);
-
-  try {
-    const apiUrl = `https://f3002982-3fd4-4aa4-8f13-901997cfe69e-00-1er51kqce6gf7.spock.replit.dev/api/download?url=${encodeURIComponent(url)}`;
-    console.log("🌐 API Endpoint:", apiUrl);
-
-    const response = await fetch(apiUrl);
-    console.log("📥 Response Status:", response.status);
-
-    if (!response.ok) {
-      throw new Error(`HTTP Error ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("✅ Data dari API:", data);
-
-    if (!data.formats || data.formats.length === 0) {
-      resultDiv.innerHTML = "<p class='text-red-500'>❌ Tidak ada format tersedia.</p>";
-      console.warn("⚠️ Data format kosong:", data);
+    if (!url) {
+      resultDiv.innerHTML = "<p class='text-yellow-400'>⚠️ Link tidak boleh kosong.</p>";
       return;
     }
 
-    resultDiv.innerHTML = `
-      <div class="text-left space-y-6">
-        <div class="flex gap-4 items-start flex-col sm:flex-row">
-          <img src="${data.thumbnail}" class="w-40 rounded-lg shadow-lg" />
+    resultDiv.innerHTML = "<p class='text-gray-400 animate-pulse'>⏳ Mengambil data dari API...</p>";
+
+    const apiBase = "https://f3002982-3fd4-4aa4-8f13-901997cfe69e-00-1er51kqce6gf7.spock.replit.dev";
+    const infoUrl = `${apiBase}/api/info?url=${encodeURIComponent(url)}`;
+    const downloadUrl = `${apiBase}/api/download?url=${encodeURIComponent(url)}`;
+
+    try {
+      const res = await fetch(infoUrl);
+      const data = await res.json();
+
+      if (!data || data.error) {
+        throw new Error(data?.error || "Data tidak valid.");
+      }
+
+      resultDiv.innerHTML = `
+        <div class="text-left space-y-6">
+          <div class="flex gap-4 items-start flex-col sm:flex-row">
+            <img src="${data.thumbnail}" class="w-40 rounded-lg shadow-lg" />
+            <div>
+              <h3 class="text-lg font-bold text-cyan-300">${data.title}</h3>
+              <p class="text-gray-400 text-sm">Durasi: ${(data.duration / 60).toFixed(1)} menit</p>
+              <p class="text-gray-400 text-sm">Channel: ${data.uploader}</p>
+            </div>
+          </div>
+
           <div>
-            <h3 class="text-lg font-bold text-cyan-300">${data.title}</h3>
-            <p class="text-gray-400 text-sm">Durasi: ${(data.duration / 60).toFixed(1)} menit</p>
-            <p class="text-gray-400 text-sm">Channel: ${data.uploader}</p>
+            <h4 class="text-white font-semibold mb-2">🎬 Kualitas Tersedia:</h4>
+            <table class="w-full text-sm text-left text-white border border-gray-700 rounded overflow-hidden">
+              <thead class="bg-gray-800 text-gray-300">
+                <tr>
+                  <th class="px-4 py-2 border-b border-gray-700">Kualitas</th>
+                  <th class="px-4 py-2 border-b border-gray-700">Ukuran</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.formats.map(f => `
+                  <tr class="border-t border-gray-700 hover:bg-gray-800 transition">
+                    <td class="px-4 py-2">${f.quality}</td>
+                    <td class="px-4 py-2">${
+                      f.filesize ? (f.filesize / 1024 / 1024).toFixed(2) + " MB" : "?? MB"
+                    }</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-4">
+            <a href="${downloadUrl}" class="inline-block bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white font-medium">
+              ⬇ Download Video + Audio
+            </a>
           </div>
         </div>
+      `;
 
-        <div>
-          <h4 class="text-white font-semibold mb-2">🎬 Pilihan Kualitas Video:</h4>
-          <table class="w-full text-sm text-left text-white border border-gray-700 rounded overflow-hidden">
-            <thead class="bg-gray-800 text-gray-300">
-              <tr>
-                <th class="px-4 py-2 border-b border-gray-700">Kualitas</th>
-                <th class="px-4 py-2 border-b border-gray-700">Ukuran</th>
-                <th class="px-4 py-2 border-b border-gray-700">Download</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.formats.map(f => `
-                <tr class="border-t border-gray-700 hover:bg-gray-800 transition">
-                  <td class="px-4 py-2">${f.quality}</td>
-                  <td class="px-4 py-2">${(f.filesize / (1024 * 1024)).toFixed(2)} MB</td>
-                  <td class="px-4 py-2">
-                    <a href="${f.url}" download>
-                      <button class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm">⬇ Download</button>
-                    </a>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-
-  } catch (err) {
-    console.error('❌ Fetch error:', err);
-    resultDiv.innerHTML = `<p class='text-red-500'>❌ Gagal mengambil data dari API. ${err.message}</p>`;
+    } catch (err) {
+      console.error('❌ Fetch error:', err);
+      resultDiv.innerHTML = `<p class='text-red-500'>❌ Gagal mengambil data dari API: ${err.message}</p>`;
+    }
   }
-}
 
 <!--VERSI YANG ADA YOUTUBE NYA>
   </script>
