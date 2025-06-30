@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Instagram Downloader</title>
+  <title>Downloader - Aditya Jatayu</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .modal-enter {
@@ -30,7 +30,7 @@
 <!-- Navbar -->
 <nav class="w-full fixed top-0 left-0 z-50 backdrop-blur-md bg-white/10 border-b border-white/10 text-white">
   <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-    <span class="text-cyan-400 font-bold text-lg">v.1.0</span>
+    <span class="text-cyan-400 font-bold text-lg">Media Downloader</span>
 
     <!-- Hamburger button -->
     <button id="navToggle" class="md:hidden text-white focus:outline-none">
@@ -68,20 +68,19 @@
 <!-- Overlay background when menu open -->
 <div id="navBackdrop" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40" onclick="closeNav()"></div>
 
-  <h1 class="text-3xl font-bold text-cyan-400">Instagram Downloader</h1>
-  <p class="text-gray-400 text-sm mt-1">
+  <!--h1 class="text-3xl font-bold text-cyan-400">Sosmed Downloader</h1-->
+  <p class="text-white-400 text-sm mt-1">
   Still under development
 </p>
 <p class="text-gray-400 text-sm mt-1">
   Report bug's on E-mail / Dm Instagram
 </p>
-  
   <div class="flex flex-col items-center gap-4 w-full max-w-md">
   <div class="relative w-full">
-    <input type="text" id="urlInput" placeholder="Tempel link Instagram di sini"
-      class="w-full px-4 py-2 pr-12 rounded-md bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+    <input type="text" id="urlInput" placeholder="Tempel linknya di sini"
+      class="w-full px-4 py-2 pr-12 rounded-md bg-gray-800 border border-white-600 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
     
-    <button onclick="pasteFromClipboard()" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-white">
+    <button onclick="pasteFromClipboard()" class="absolute inset-y-0 right-0 flex items-center px-3 text-cyan-400 hover:text-white">
       <!-- SVG Icon Clipboard -->
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
         viewBox="0 0 24 24" stroke="currentColor">
@@ -91,11 +90,21 @@
     </button>
   </div>
 
-  <div class="flex gap-3">
+  <div class="flex flex-wrap justify-center gap-3">
     <button onclick="downloadIG()"
       class="bg-cyan-500 hover:bg-cyan-600 transition text-white px-6 py-2 rounded-md font-medium">
-      Download
+      Download Instagram
     </button>
+    
+    <button onclick="downloadFB()"
+  class="bg-blue-500 hover:bg-blue-600 transition text-white px-6 py-2 rounded-md font-medium">
+  Download Facebook
+</button>
+
+<button onclick="downloadTT()"
+  class="bg-pink-500 hover:bg-pink-600 transition text-white px-6 py-2 rounded-md font-medium">
+  Download Tiktok
+</button>
 
     <button onclick="resetForm()"
       class="bg-red-500 hover:bg-red-600 transition text-white px-6 py-2 rounded-md font-medium">
@@ -113,6 +122,23 @@
       <button onclick="closeModal()" class="absolute top-2 right-2 text-white bg-gray-800 hover:bg-gray-700 p-2 rounded-full">✖</button>
     </div>
   </div>
+  
+  <!-- Tutorial Penggunaan -->
+<section class="w-full max-w-2xl text-left mt-12 p-6 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+  <h2 class="text-xl font-semibold text-cyan-400 mb-3">📌 Cara Menggunakan</h2>
+  <ol class="list-decimal list-inside text-gray-300 space-y-2 text-sm leading-relaxed">
+    <li>Buka aplikasi <span class="text-white font-medium">Instagram</span>, <span class="text-white font-medium">Facebook</span>, atau <span class="text-white font-medium">TikTok</span>.</li>
+    <li>Salin tautan (link) dari media yang ingin kamu download.</li>
+    <li>Tempelkan link tersebut di kolom input di atas atau juga bisa tekan tombol disamping nya.</li>
+    <li>Pilih tombol sesuai platform:
+      <span class="text-cyan-400">Download</span> untuk Instagram,
+      <span class="text-blue-400">Download Facebook</span>, atau
+      <span class="text-pink-400">Download Tiktok</span>.
+    </li>
+    <li>Tunggu beberapa detik hingga media ditampilkan.</li>
+    <li>Tekan tombol <span class="text-green-400">⬇ Download</span> di bawah media untuk menyimpannya.</li>
+  </ol>
+</section>
  <!--footer-->
 <footer class="mt-10 w-full border-t border-gray-700 pt-6 pb-4 text-center text-sm text-gray-400">
   Dibuat dengan ❤️ oleh <span class="text-cyan-400 font-medium">Aditya Jatayu </span> · © 2025
@@ -140,10 +166,10 @@
 
       resultDiv.innerHTML = "<p class='text-gray-400 animate-pulse'>⏳ Mengambil data...</p>";
 
-
-
-      const apiKey = "KyTxR5pHaEn2";
-      const apiUrl = `https://api.neoxr.eu/api/ig?url=${encodeURIComponent(url)}&apikey=${apiKey}`; 
+      const encodedKey = "S3lUeFI1cEhhRW4y"; 
+const getAPIKey = () => atob("S3lU" + "eFI1" + "cEhh" + "RW4y");
+const apiKey = getAPIKey();
+const apiUrl = `https://api.neoxr.eu/api/ig?url=${encodeURIComponent(url)}&apikey=${apiKey}`;
       
       try {
         const res = await fetch(apiUrl);
@@ -207,7 +233,7 @@
     const text = await navigator.clipboard.readText();
     document.getElementById('urlInput').value = text;
   } catch (err) {
-    alert("❌ Gagal membaca clipboard. Aktifkan izin akses clipboard.");
+    alert("kasih izin akses clipboard dulu bang.");
     console.error(err);
   }
 }
@@ -221,6 +247,147 @@ resultDiv.classList.add("opacity-100");
       modal.classList.add("hidden");
       modal.classList.remove("flex");
     }
+    
+    async function downloadFB() {
+  const url = document.getElementById('urlInput').value.trim();
+  const resultDiv = document.getElementById('result');
+  const encodedKey = "S3lUeFI1cEhhRW4y"; 
+const getAPIKey = () => atob("S3lU" + "eFI1" + "cEhh" + "RW4y");
+const apiKey = getAPIKey();
+
+  if (!url) {
+    resultDiv.innerHTML = "<p class='text-yellow-400'>⚠️ Link tidak boleh kosong.</p>";
+    return;
+  }
+
+  resultDiv.innerHTML = "<p class='text-gray-400 animate-pulse'>⏳ Mengambil data FB...</p>";
+const apiUrl = `https://api.neoxr.eu/api/fb?url=${encodeURIComponent(url)}&apikey=${apiKey}`;
+  
+
+  try {
+    const res = await fetch(apiUrl);
+    const json = await res.json();
+
+    if (!json.status || !json.data || json.data.length === 0) {
+      resultDiv.innerHTML = "<p class='text-red-500'>❌ Video tidak ditemukan atau API key salah.</p>";
+      return;
+    }
+
+    resultDiv.innerHTML = "<p class='text-cyan-300 mb-4'>🎥 Video Tersedia:</p>";
+
+    json.data.forEach((item, index) => {
+      resultDiv.innerHTML += `
+        <div class="mb-6">
+          <p class="text-white font-semibold mb-2">Kualitas: ${item.quality}</p>
+          <video controls src="${item.url}" class="mx-auto rounded-lg w-full max-w-md mb-2"></video>
+          <a href="${item.url}" download>
+            <button class="bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded-md text-white">⬇ Download ${item.quality}</button>
+          </a>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    console.error(err);
+    resultDiv.innerHTML = "<p class='text-red-500'>❌ Gagal menghubungi API.</p>";
+  }
+}
+
+async function downloadTT() {
+  const url = document.getElementById('urlInput').value.trim();
+  const resultDiv = document.getElementById('result');
+  const encodedKey = "S3lUeFI1cEhhRW4y"; 
+const getAPIKey = () => atob("S3lU" + "eFI1" + "cEhh" + "RW4y");
+const apiKey = getAPIKey();
+
+  if (!url) {
+    resultDiv.innerHTML = "<p class='text-yellow-400'>⚠️ Link tidak boleh kosong.</p>";
+    return;
+  }
+
+  resultDiv.innerHTML = "<p class='text-gray-400 animate-pulse'>⏳ Mengambil data TikTok...</p>";
+const apiUrl = `https://api.neoxr.eu/api/tiktok?url=${encodeURIComponent(url)}&apikey=${apiKey}`;
+  
+
+  try {
+    const res = await fetch(apiUrl);
+    const json = await res.json();
+
+    if (!json.status || !json.data) {
+      resultDiv.innerHTML = "<p class='text-red-500'>❌ Data tidak valid.</p>";
+      return;
+    }
+
+    const { video, videoWM, audio, photo, caption, author } = json.data;
+    resultDiv.innerHTML = "";
+
+    // Caption & author
+    if (caption || author?.nickname) {
+      resultDiv.innerHTML += `
+        <div class="mb-4 text-sm text-gray-300">
+          <p class="mb-1">👤 <span class="text-white font-medium">${author?.nickname || 'Pengguna TikTok'}</span></p>
+          <p>📝 ${caption || 'Tanpa caption'}</p>
+        </div>
+      `;
+    }
+
+    // Photo (jika tersedia)
+    if (photo && Array.isArray(photo)) {
+      resultDiv.innerHTML += `<p class='text-cyan-300 font-semibold mb-2'>📸 Postingan Foto:</p>`;
+      photo.forEach((img, index) => {
+        resultDiv.innerHTML += `
+          <div class="mb-4">
+            <img src="${img}" onclick="showModal('${img}')" class="cursor-pointer mx-auto rounded-lg max-w-xs shadow-lg hover:scale-105 transition" />
+            <a href="${img}" download>
+              <button class="mt-2 bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded text-white">⬇ Download Gambar ${index + 1}</button>
+            </a>
+          </div>
+        `;
+      });
+    }
+
+    // Video No WM
+    if (video) {
+      resultDiv.innerHTML += `
+        <p class='text-cyan-300 font-semibold mt-6 mb-2'>🎬 Video Tanpa Watermark:</p>
+        <video controls src="${video}" class="mx-auto rounded-lg w-full max-w-md mb-2"></video>
+        <a href="${video}" download>
+          <button class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-md text-white">⬇ Download Video No WM</button>
+        </a>
+      `;
+    }
+
+    // Video WM
+    if (videoWM) {
+      resultDiv.innerHTML += `
+        <p class='text-cyan-300 font-semibold mt-6 mb-2'>🎬 Video Watermark:</p>
+        <video controls src="${videoWM}" class="mx-auto rounded-lg w-full max-w-md mb-2"></video>
+        <a href="${videoWM}" download>
+          <button class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-md text-white">⬇ Download Video WM</button>
+        </a>
+      `;
+    }
+
+    // Audio
+    if (audio) {
+      resultDiv.innerHTML += `
+        <p class='text-cyan-300 font-semibold mt-6 mb-2'>🔊 Audio Only:</p>
+        <audio controls src="${audio}" class="w-full max-w-md mx-auto mb-2"></audio>
+        <a href="${audio}" download>
+          <button class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-md text-white">⬇ Download Audio</button>
+        </a>
+      `;
+    }
+
+    if (!photo && !video && !videoWM && !audio) {
+      resultDiv.innerHTML = "<p class='text-red-500'>⚠️ Tidak ada media yang bisa didownload.</p>";
+    }
+
+  } catch (err) {
+    console.error(err);
+    resultDiv.innerHTML = "<p class='text-red-500'>❌ Gagal menghubungi API.</p>";
+  }
+}
   </script>
 </body>
 </html>
