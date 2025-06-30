@@ -422,6 +422,11 @@ const apiUrl = `https://api.neoxr.eu/api/tiktok?url=${encodeURIComponent(url)}&a
         throw new Error(data?.error || "Data tidak valid.");
       }
 
+      const sortedFormats = data.formats.sort((a, b) => {
+        const getRes = q => parseInt(q.replace("p", "")) || 0;
+        return getRes(a.quality) - getRes(b.quality);
+      });
+
       resultDiv.innerHTML = `
         <div class="text-left space-y-6">
           <div class="flex gap-4 items-start flex-col sm:flex-row">
@@ -434,9 +439,9 @@ const apiUrl = `https://api.neoxr.eu/api/tiktok?url=${encodeURIComponent(url)}&a
           </div>
 
           <div>
-            <h4 class="text-white font-semibold mb-2">🎬 Pilih Kualitas untuk Download:</h4>
+            <h4 class="text-white font-semibold mb-2">🎬 Pilih Kualitas Video:</h4>
             <ul class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              ${data.formats.map(f => `
+              ${sortedFormats.map(f => `
                 <li>
                   <button
                     onclick="downloadSelected('${url}', '${f.quality}')"
@@ -459,6 +464,7 @@ const apiUrl = `https://api.neoxr.eu/api/tiktok?url=${encodeURIComponent(url)}&a
     const downloadUrl = `${apiBase}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(quality)}`;
     window.location.href = downloadUrl;
   }
+
 
 <!--VERSI YANG ADA YOUTUBE NYA>
   </script>
