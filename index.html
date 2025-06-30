@@ -400,6 +400,7 @@ const apiUrl = `https://api.neoxr.eu/api/tiktok?url=${encodeURIComponent(url)}&a
  
 
   <!-- Tambahkan ini di bagian downloadYT() pada script HTML kamu --><script>
+ 
   async function downloadYT() {
     const url = document.getElementById('urlInput').value.trim();
     const resultDiv = document.getElementById('result');
@@ -444,13 +445,24 @@ const apiUrl = `https://api.neoxr.eu/api/tiktok?url=${encodeURIComponent(url)}&a
               ${sortedFormats.map(f => `
                 <li>
                   <button
-                    onclick="downloadSelected('${url}', '${f.quality}')"
+                    onclick="downloadSelected('${url}', '${f.quality}', false)"
                     class="bg-green-600 hover:bg-green-700 px-3 py-2 w-full rounded text-sm">
                     ${f.quality} - ${f.filesize ? (f.filesize / 1024 / 1024).toFixed(1) + ' MB' : '?? MB'}
                   </button>
                 </li>`).join('')}
             </ul>
           </div>
+
+          <div class="mt-6">
+            <h4 class="text-white font-semibold mb-2">🎵 Download Audio Only:</h4>
+            <button
+              onclick="downloadSelected('${url}', '', true)"
+              class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm">
+              🎧 Download MP3
+            </button>
+          </div>
+
+          <div id="loadingBar" class="mt-6 text-yellow-300 hidden">⏳ Preparing download...</div>
         </div>
       `;
     } catch (err) {
@@ -459,14 +471,27 @@ const apiUrl = `https://api.neoxr.eu/api/tiktok?url=${encodeURIComponent(url)}&a
     }
   }
 
-  function downloadSelected(url, quality) {
+  function downloadSelected(url, quality = "", audioOnly = false) {
+    const loading = document.getElementById("loadingBar");
+    if (loading) loading.classList.remove("hidden");
+
     const apiBase = "https://f3002982-3fd4-4aa4-8f13-901997cfe69e-00-1er51kqce6gf7.spock.replit.dev";
-    const downloadUrl = `${apiBase}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(quality)}`;
+    let downloadUrl = `${apiBase}/api/download?url=${encodeURIComponent(url)}`;
+
+    if (audioOnly) {
+      downloadUrl += `&audio_only=true`;
+    } else {
+      downloadUrl += `&quality=${encodeURIComponent(quality)}`;
+    }
+
     window.location.href = downloadUrl;
+
+    setTimeout(() => {
+      if (loading) loading.classList.add("hidden");
+    }, 4000); // hide loading after 4s
   }
-
-
 <!--VERSI YANG ADA YOUTUBE NYA>
   </script>
 </body>
 </html>
+ 
